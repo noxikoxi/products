@@ -6,7 +6,7 @@ ENV CGO_ENABLED=1
 
 COPY . .
 
-RUN apk add build-base \
+RUN apk add --no-cache build-base \
     && go mod tidy \
     && go build -o myapp .
 
