@@ -3,9 +3,9 @@ FROM node:23-slim
 WORKDIR /app
 COPY . .
 
-RUN npm install
-RUN npm install -g serve
-RUN npm run build
+RUN npm install \
+    && npm install -g serve\
+    && npm run build
 
 EXPOSE 5137
 

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useState, useContext, useMemo, ReactNode } from "react";
 import {CartItem} from "../types/types.tsx";
 
 interface CartContextType {
@@ -23,8 +23,10 @@ interface CartProviderProps {
 export const CartProvider = ({ children }: CartProviderProps) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
+    const contextValue = useMemo(() => ({ cartItems, setCartItems }), [cartItems, setCartItems]);
+
     return (
-        <CartContext.Provider value={{ cartItems, setCartItems }}>
+        <CartContext.Provider value={contextValue}>
             {children}
         </CartContext.Provider>
     );

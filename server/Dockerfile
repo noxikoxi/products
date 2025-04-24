@@ -1,11 +1,14 @@
-FROM golang:latest
+FROM golang:1.24.2-alpine
 
 WORKDIR /app
 
+ENV CGO_ENABLED=1
+
 COPY . .
 
-RUN go mod tidy
-RUN go build -o myapp .
+RUN apk add build-base \
+    && go mod tidy \
+    && go build -o myapp .
 
 EXPOSE 1323
 
