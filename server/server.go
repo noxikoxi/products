@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4/middleware"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 	"net/http"
 	"productsServer/database"
 	"productsServer/models"
 	"productsServer/routers"
 	"regexp"
+
+	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 
 	"github.com/labstack/echo/v4"
 )
