@@ -1,2 +1,5 @@
 #!/bin/bash
-docker-compose up
+cd "client"
+npm run build
+cd ".."
+docker-compose up --build

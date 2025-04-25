@@ -1,11 +1,12 @@
 FROM node:23-slim
 
-WORKDIR /app
-COPY . .
+RUN useradd -ms /bin/bash student && adduser student sudo
+COPY ./dist /home/student/dist
 
-RUN npm install \
-    && npm install -g serve\
-    && npm run build
+RUN npm install --ignore-scripts -g serve 
+
+WORKDIR /home/student/
+USER student
 
 EXPOSE 5137
 
