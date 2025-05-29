@@ -60,14 +60,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       # Backend Deploy
-      - name: Restart Azure WebApp
-        run: |
-          az webapp restart --name ${{ secrets.AZURE_FRONTENT_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-
-      # Frontend Deploy
-      - name: Restart Azure WebApp
+      - name: Restart Azure Backend
         run: |
           az webapp restart --name ${{ secrets.AZURE_BACKEND_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+
+      # Frontend Deploy
+      - name: Restart Azure Frontend
+        run: |
+          az webapp restart --name ${{ secrets.AZURE_FRONTENT_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
       # EMAIL
       - name: Send email notification
         uses: dawidd6/action-send-mail@v5
