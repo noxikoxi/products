@@ -6,11 +6,10 @@ import axios from "axios";
 const Products = () => {
     const { cartItems, setCartItems } = useCartContext();
     const [products, setProducts] = useState<Product[]>([]);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
-        console.log(cartItems);
-
-        axios.get<Product[]>("http://localhost:1323/products")
+        axios.get<Product[]>(backendUrl + "/products")
             .then(res => {
                 setProducts(res.data);
             })

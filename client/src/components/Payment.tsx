@@ -6,6 +6,7 @@ import {RequestPayment} from "../types/types.tsx";
 const Payment = () => {
     const { cartItems, setCartItems } = useCartContext();
     const [isConfirming, setIsConfirming] = useState(false);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const sendToServer = async () => {
         try {
@@ -18,7 +19,7 @@ const Payment = () => {
             };
 
 
-            await axios.post("http://localhost:1323/payment", request);
+            await axios.post(backendUrl + "/payment", request);
             setCartItems([]);
         } catch (error) {
             console.error("Error sending payment:", error);

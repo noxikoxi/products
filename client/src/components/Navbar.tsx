@@ -9,9 +9,9 @@ const Navbar = ({links, labels} : Props) => {
 
     return (
     <nav className="bar">
-        <ul style={{ display: 'flex', gap: '1rem', listStyle: 'none' }}>
+        <ul>
             {links.map((link, i) => (
-                <li key={link}>
+                <li key={link} style={{fontSize: "1.5em"}}>
                     <Link to={link}>{labels[i]}</Link>
                 </li>
             ))}

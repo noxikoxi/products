@@ -1,13 +1,21 @@
-FROM node:23-slim
+FROM node:23-slim AS builder
 
-RUN useradd -ms /bin/bash student && adduser student sudo
-COPY ./dist /home/student/dist
+WORKDIR /app
 
-RUN npm install --ignore-scripts -g serve 
+COPY package*.json ./
+COPY vite.config.* ./
+RUN npm install --ignore-scripts
 
-WORKDIR /home/student/
-USER student
+COPY . .
 
-EXPOSE 5137
+RUN npm run build
 
-CMD ["serve", "-s", "dist", "-l", "5137"]
+FROM nginx:alpine AS runner
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
