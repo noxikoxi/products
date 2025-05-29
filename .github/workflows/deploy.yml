@@ -45,8 +45,7 @@ jobs:
           subject: Build & Deployment - ${{ github.repository }}
           to: ${{ github.event.head_commit.author.email }}
           from: ${{ secrets.MAIL_USERNAME }}
-          content_type: text/html
-          convert_markdown: true
+          content_type: html_body
           body: |
             ✅ <b>Build & Push Completed!</b><br>
             Repo: <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a><br>
@@ -54,21 +53,21 @@ jobs:
             Branch: ${{ github.ref_name }}<br>
             Status: <b>${{ job.status }}</b><br><br>
             ⏱ Run Time: ${{ github.run_id }}<br>
-      # # Azure Login
-      # - name: Azure Login
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # Azure Login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      # # Backend Deploy
-      # - name: Restart Azure WebApp
-      #   run: |
-      #     az webapp restart --name ${{ secrets.AZURE_FRONTENT_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+      # Backend Deploy
+      - name: Restart Azure WebApp
+        run: |
+          az webapp restart --name ${{ secrets.AZURE_FRONTENT_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
-      # # Frontend Deploy
-      # - name: Restart Azure WebApp
-      #   run: |
-      #     az webapp restart --name ${{ secrets.AZURE_BACKEND_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+      # Frontend Deploy
+      - name: Restart Azure WebApp
+        run: |
+          az webapp restart --name ${{ secrets.AZURE_BACKEND_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
       # EMAIL
       - name: Send email notification
         uses: dawidd6/action-send-mail@v5
@@ -80,8 +79,7 @@ jobs:
           subject: Build & Deployment - ${{ github.repository }}
           to: ${{ github.event.head_commit.author.email }}
           from: ${{ secrets.MAIL_USERNAME }}
-          content_type: text/html
-          convert_markdown: true
+          content_type: html_body
           body: |
             ✅ <b>Deploy Completed!</b><br>
             Repo: <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a><br>
