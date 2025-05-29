@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"productsServer/database"
-	"productsServer/models"
-	"productsServer/routers"
-	"regexp"
-
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"net/http"
+	"os"
+	"productsServer/database"
+	"productsServer/models"
+	"productsServer/routers"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,7 +19,6 @@ func main() {
 	db, err := gorm.Open(sqlite.Open("database/database.db"), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: false,
 	})
-
 	// Ważne, bez tego nie sprawdza kluczy
 	db.Exec("PRAGMA foreign_keys = ON")
 
@@ -33,8 +32,17 @@ func main() {
 		return
 	}
 
-	allowedOriginPattern := `^https?://[a-z0-9]+\.ngrok-free\.app$`
-	re := regexp.MustCompile(allowedOriginPattern)
+	err = godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "1323"
+	}
+
+	allowedFrontend := os.Getenv("FRONTEND_URL")
 
 	e := echo.New()
 	database.InitDB(db)
@@ -43,15 +51,12 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowOriginFunc: func(origin string) (bool, error) {
-			if origin == "http://localhost:5137" {
-				return true, nil
-			}
-			return re.MatchString(origin), nil
+			return origin == allowedFrontend, nil
 		},
 	}))
 
 	routers.RegisterProductRoutes(e)
 	routers.RegisterPaymentCartRoutes(e)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }

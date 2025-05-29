@@ -1,22 +1,36 @@
-FROM golang:1.24.2
+FROM golang:1.24.2 AS builder
 
-RUN useradd -ms /bin/bash student
+WORKDIR /app
 
-WORKDIR /home/student/
+COPY go.mod go.sum ./
+RUN go mod download
 
 ENV CGO_ENABLED=1
 
-COPY go.mod go.sum /home/student/
-COPY controllers/ /home/student/controllers/
-COPY database/ /home/student/database/
-COPY models/ /home/student/models/
-COPY routers/ /home/student/routers/
-COPY server.go /home/student/
+COPY controllers/ controllers/
+COPY database/ database/
+COPY models/ models/
+COPY routers/ routers/
+COPY server.go .
 
-RUN chown -R student:student /home/student/database/ \
-    && chmod -R 755 /home/student/database/ \
-    && chmod 644 /home/student/database/database.db \
-    && go build -o myapp .
+RUN go build -o myapp server.go
+
+FROM debian:bookworm-slim
+
+RUN useradd -ms /bin/bash student
+
+WORKDIR /app
+
+COPY --from=builder /app/myapp .
+COPY --from=builder /app/database/database.db ./database/database.db
+
+RUN chown -R student:student . \
+    && chmod 755 myapp \
+    && chmod 644 ./database/database.db
+
+# default
+ENV FRONTEND_URL=http://localhost:5137
+ENV PORT=1323
 
 EXPOSE 1323
 
