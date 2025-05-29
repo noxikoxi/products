@@ -8,6 +8,16 @@ import MainPage from "./pages/MainPage.tsx";
 import ProductsPage from "./pages/ProductsPage.tsx";
 import CartPage from "./pages/CartPage.tsx";
 
+declare global {
+  interface Window {
+    _env_: {
+      VITE_API_URL: string;
+    };
+  }
+}
+
+export const API_BASE_URL = window._env_?.VITE_API_URL || import.meta.env.VITE_API_URL;
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <CartProvider>

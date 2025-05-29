@@ -2,14 +2,13 @@ import {useEffect, useState} from "react";
 import {useCartContext} from "../contexts/CartContext.tsx";
 import {Product} from "../types/types.tsx";
 import axios from "axios";
+import { API_BASE_URL } from "../main.tsx";
 
 const Products = () => {
     const { cartItems, setCartItems } = useCartContext();
     const [products, setProducts] = useState<Product[]>([]);
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
     useEffect(() => {
-        axios.get<Product[]>(backendUrl + "/products")
+        axios.get<Product[]>(API_BASE_URL + "/products")
             .then(res => {
                 setProducts(res.data);
             })
@@ -33,7 +32,8 @@ const Products = () => {
         <>
             <h2>All Products</h2>
             <div className="productsWrapper">
-                {products.map((product) => (
+                {Array.isArray(products) ? (
+                products.map(product => (
                     <div key={product.id} className="productContainer">
                         <div className="productWrapper">
                             <div className="product">
@@ -44,7 +44,11 @@ const Products = () => {
                             <button onClick={() => addToCart(product)}>Add to cart</button>
                         </div>
                     </div>
-                ))}
+                ))
+                ) : (
+                <h3>No products available</h3>
+                )}
+                
             </div>
         </>
     );
