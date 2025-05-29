@@ -45,7 +45,7 @@ jobs:
           subject: Build & Deployment - ${{ github.repository }}
           to: ${{ github.event.head_commit.author.email }}
           from: ${{ secrets.MAIL_USERNAME }}
-          content_type: html_body
+          html_body: true
           body: |
             ✅ <b>Build & Push Completed!</b><br>
             Repo: <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a><br>
@@ -79,10 +79,10 @@ jobs:
           subject: Build & Deployment - ${{ github.repository }}
           to: ${{ github.event.head_commit.author.email }}
           from: ${{ secrets.MAIL_USERNAME }}
-          content_type: html_body
+          html_body: true
           body: |
             ✅ <b>Deploy Completed!</b><br>
-            Repo: <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a><br>
+            Repo: <a href="https://github.com/${{ github.repository }}">${{ github.repository }}</a><br>
             Commit: ${{ github.sha }}<br>
             Branch: ${{ github.ref_name }}<br>
             🌐 GitHub Actions workflow zakończony sukcesem.
