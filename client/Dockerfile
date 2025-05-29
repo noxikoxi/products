@@ -4,10 +4,15 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY vite.config.ts ./
+COPY tsconfig.json ./
+COPY tsconfig.app.json ./
+COPY tsconfig.node.json ./
+
 RUN npm install --ignore-scripts
 
 COPY public ./public
 COPY src ./src
+COPY index.html ./
 
 RUN npm run build
 
